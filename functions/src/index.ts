@@ -1,9 +1,21 @@
 import * as firebase from "firebase";
 import * as admin from "firebase-admin";
-import { region } from "firebase-functions";
+import {region} from "firebase-functions";
 import * as express from "express";
-import { COMMENTS_COLLECTION, FIREBASE_CONFIG, REGION_REQUEST, STATUS_CLIENT_ERROR, STATUS_CREATED, STATUS_SERVER_ERROR, USERS_COLLECTION } from "./default.constants";
-import { COMMENTS_ROUTE, SIGN_UP_ROUTE } from "./rounting.constants";
+import {
+    COMMENTS_COLLECTION,
+    FIREBASE_CONFIG,
+    REGION_REQUEST,
+    STATUS_CLIENT_ERROR,
+    STATUS_CREATED,
+    STATUS_SERVER_ERROR,
+    STATUS_UNAUTHORIZED_ERROR,
+    UserInfo,
+    USERS_COLLECTION
+} from "./default.constants";
+import {COMMENTS_ROUTE, LOGIN_ROUTE, SIGN_UP_ROUTE} from "./rounting.constants";
+import {UserValidator} from "./user.validator";
+import {WRONG_CREDENTIALS_ERROR, WRONG_PASSWORD_ERROR} from "./errors.constants";
 
 type DocumentData = admin.firestore.DocumentData;
 
@@ -12,6 +24,8 @@ firebase.initializeApp(FIREBASE_CONFIG);
 
 const app = express();
 const db = admin.firestore();
+
+const userValidator = new UserValidator();
 
 app.get(COMMENTS_ROUTE, (request, response) => {
     db.collection(COMMENTS_COLLECTION)
@@ -46,13 +60,17 @@ app.post(COMMENTS_ROUTE, (request, response) => {
         })
 });
 
+// @ts-ignore
 app.post(SIGN_UP_ROUTE, (request, response) => {
-    const newUser = {
+    const newUser: UserInfo = {
         email: request.body.email,
         password: request.body.password,
         confirmPassword: request.body.confirmPassword,
         handle: request.body.handle
     };
+
+    if (userValidator.validateAllProps(newUser))
+        return response.status(STATUS_CLIENT_ERROR).json(userValidator.validationErrors);
 
     let userToken: string;
     let userId: string;
@@ -87,6 +105,29 @@ app.post(SIGN_UP_ROUTE, (request, response) => {
         .then(() => response.status(STATUS_CREATED).json({token: userToken}))
         .catch(error => {
             response.status(STATUS_SERVER_ERROR).json({error: error.code});
+            throw new Error(error);
+        })
+});
+
+// @ts-ignore
+app.post(LOGIN_ROUTE, (request, response) => {
+    const user: UserInfo = {
+        email: request.body.email,
+        password: request.body.password,
+    };
+
+    if (userValidator.validateRequiredProps(user))
+        return response.status(STATUS_CLIENT_ERROR).json(userValidator.validationErrors);
+
+    firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+        .then(credential => credential.user ? credential.user.getIdToken() : null)
+        .then(token => response.json({token}))
+        .catch(error => {
+            if (error.code === WRONG_PASSWORD_ERROR) {
+                return response.status(STATUS_UNAUTHORIZED_ERROR).json({general: WRONG_CREDENTIALS_ERROR});
+            } 
+                response.status(STATUS_SERVER_ERROR).json({error: error.code});
+            
             throw new Error(error);
         })
 });
