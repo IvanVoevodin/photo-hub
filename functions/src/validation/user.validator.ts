@@ -1,5 +1,5 @@
-import {UserInfo} from "./default.constants";
-import {EMPTY_ERROR, NOT_MATCHING_PASSWORDS, NOT_VALID_EMAIL, UserErrors} from "./errors.constants";
+import {UserInfo} from "../domain.constants";
+import {EMPTY_ERROR, NOT_MATCHING_PASSWORDS, NOT_VALID_EMAIL, UserErrors} from "../errors.constants";
 
 export class UserValidator {
     private _validationErrors: UserErrors;
