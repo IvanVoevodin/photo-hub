@@ -1,6 +1,6 @@
 import * as express from "express";
-import {STATUS_UNAUTHORIZED_ERROR, USERS_COLLECTION} from "../domain.constants";
-import {admin, db} from "../utils/admin-fb.utils";
+import { STATUS_UNAUTHORIZED_ERROR, USERS_COLLECTION } from "../domain.constants";
+import { admin, db } from "../utils/admin-fb.utils";
 
 export const fbAuth = (request: any, response: express.Response, next: any) => {
     let idToken;

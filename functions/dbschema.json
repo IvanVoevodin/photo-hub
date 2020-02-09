@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "uid": "",
+      "email": "",
+      "handle": "",
+      "creationTime": "",
+      "imageUrl": "",
+      "bio": "",
+      "website": "",
+      "location": ""
+    }
+  ],
+  "userDetails": {
+    "credentials": {
+      "uid": "",
+      "email": "",
+      "handle": "",
+      "creationTime": "",
+      "imageUrl": "",
+      "bio": "",
+      "website": "",
+      "location": ""
+    },
+    "likes": [
+      {
+        "userHandle": "",
+        "commentId": ""
+      }
+    ]
+  },
+  "comments": [
+    {
+      "userName": "",
+      "comment": "",
+      "commentTime": "",
+      "likeCount": 5,
+      "commentCount": 3
+    }
+  ]
+}
