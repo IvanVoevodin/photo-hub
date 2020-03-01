@@ -7,6 +7,7 @@ import {
     STATUS_CREATED,
     STATUS_SERVER_ERROR,
     STATUS_UNAUTHORIZED_ERROR,
+    UploadImage,
     USER_EMPTY_IMAGE,
     UserFullInfo,
     UserInfo,
@@ -44,8 +45,8 @@ export const signup = (request: Request, response: Response) => {
     let userToken: string;
     let userId: string;
     db.doc(`/${USERS_COLLECTION}/${newUser.handle}`).get()
-        .then(snapshot => {
-            if (snapshot.exists) {
+        .then(doc => {
+            if (doc.exists) {
                 response.status(STATUS_CLIENT_ERROR).json({error: "This handle is already taken"});
                 return null;
             }
@@ -137,13 +138,7 @@ export const getAuthUser = (request: any, response: Response) => {
         })
 };
 
-interface UploadImage {
-    readonly fileName: string;
-    readonly filePath: string;
-    readonly mimetype: string;
-}
-
-export const uploadImage = (request: any, response: Response) => {
+export const uploadImage = (request: any & {rawBody: any}, response: Response) => {
     const busBoy = new Busboy({headers: request.headers});
 
     let imageToUpload: UploadImage;

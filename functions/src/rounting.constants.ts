@@ -1,4 +1,5 @@
-export const COMMENTS_ROUTE = "/comments";
+export const POST_ROUTE = "/posts";
+export const POST_BY_ID_ROUTE = `${POST_ROUTE}/:postId`;
 export const SIGN_UP_ROUTE = "/signup";
 export const LOGIN_ROUTE = "/login";
 export const USER_ROUTE = "/user";

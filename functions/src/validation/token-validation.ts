@@ -1,14 +1,15 @@
-import * as express from "express";
+import { Response } from "express";
 import { STATUS_UNAUTHORIZED_ERROR, USERS_COLLECTION } from "../domain.constants";
 import { admin, db } from "../utils/admin-fb.utils";
+import { UNAUTHORIZED_ERROR } from "../errors.constants";
 
-export const fbAuth = (request: any, response: express.Response, next: any) => {
+export const fbAuth = (request: any, response: Response, next: any) => {
     let idToken;
     const auth = request.headers.authorization;
     if (auth && auth.startsWith("Bearer ")) {
         idToken = auth.split("Bearer ")[1];
     } else {
-        response.status(STATUS_UNAUTHORIZED_ERROR).json({error: "Unauthorized"});
+        response.status(STATUS_UNAUTHORIZED_ERROR).json({error: UNAUTHORIZED_ERROR});
         throw new Error("No token found");
     }
 
@@ -21,7 +22,9 @@ export const fbAuth = (request: any, response: express.Response, next: any) => {
                 .get()
         })
         .then(query => {
-            request.user.handle = query.docs[0].data().handle;
+            const data = query.docs[0].data();
+            request.user.handle = data.handle;
+            request.user.imageUrl = data.imageUrl;
             next();
         })
         .catch(error => {

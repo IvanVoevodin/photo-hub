@@ -25,17 +25,28 @@
     "likes": [
       {
         "userHandle": "",
-        "commentId": ""
+        "postId": ""
       }
     ]
   },
+  "posts": [
+    {
+      "postId": "",
+      "userName": "",
+      "message": "",
+      "creationTime": "",
+      "likeCount": 5,
+      "commentCount": 3,
+      "comments": []
+    }
+  ],
   "comments": [
     {
+      "postId": "",
       "userName": "",
-      "comment": "",
-      "commentTime": "",
-      "likeCount": 5,
-      "commentCount": 3
+      "userImage": "",
+      "message": "",
+      "creationTime": ""
     }
   ]
 }
