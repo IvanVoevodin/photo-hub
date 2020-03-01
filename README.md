@@ -1,3 +1,3 @@
 # Photo Hub
 
-This project was created for learning React with Typescript
+This project was created for learning React with Typescript and Firebase
