@@ -24,8 +24,18 @@
     },
     "likes": [
       {
-        "userHandle": "",
+        "userName": "",
         "postId": ""
+      }
+    ],
+    "notifications": [
+      {
+        "recipient": "",
+        "sender": "",
+        "read": true,
+        "postId": "",
+        "type": "like | comment",
+        "creationTime": ""
       }
     ]
   },
@@ -46,6 +56,16 @@
       "userName": "",
       "userImage": "",
       "message": "",
+      "creationTime": ""
+    }
+  ],
+  "notifications": [
+    {
+      "recipient": "",
+      "sender": "",
+      "read": true,
+      "postId": "",
+      "type": "like | comment",
       "creationTime": ""
     }
   ]

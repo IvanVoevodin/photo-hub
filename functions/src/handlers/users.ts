@@ -2,9 +2,14 @@ import {
     Credentials,
     JPG_MIME_TYPE,
     LIKES_COLLECTION,
+    Notification,
+    NOTIFICATIONS_COLLECTION,
     PNG_MIME_TYPE,
+    PostData,
+    POSTS_COLLECTION,
     STATUS_CLIENT_ERROR,
     STATUS_CREATED,
+    STATUS_NOT_FOUND_ERROR,
     STATUS_SERVER_ERROR,
     STATUS_UNAUTHORIZED_ERROR,
     UploadImage,
@@ -18,7 +23,7 @@ import { admin, db } from "../utils/admin-fb.utils";
 import * as firebase from "firebase";
 import { Request, Response } from "express";
 import { UserValidator } from "../validation/user.validator";
-import { WRONG_CREDENTIALS_ERROR, WRONG_PASSWORD_ERROR } from "../errors.constants";
+import { EMAIL_ALREADY_IN_USE_ERROR, UNKNOWN_ERROR, WRONG_CREDENTIALS_ERROR } from "../errors.constants";
 import { FIREBASE_CONFIG } from "../firebase-config.constants";
 import * as Busboy from "busboy";
 import * as path from "path";
@@ -75,7 +80,11 @@ export const signup = (request: Request, response: Response) => {
         })
         .then(() => response.status(STATUS_CREATED).json({token: userToken}))
         .catch(error => {
-            response.status(STATUS_SERVER_ERROR).json({error: error.code});
+            if (error.code === EMAIL_ALREADY_IN_USE_ERROR) {
+                response.status(STATUS_CLIENT_ERROR).json({message: "Email is already in use"})
+            } else {
+                response.status(STATUS_SERVER_ERROR).json({error: UNKNOWN_ERROR});
+            }
             throw new Error(error);
         })
 };
@@ -95,11 +104,7 @@ export const login = (request: Request, response: Response) => {
         .then(credential => credential.user ? credential.user.getIdToken() : null)
         .then(token => response.json({token}))
         .catch(error => {
-            if (error.code === WRONG_PASSWORD_ERROR) {
-                return response.status(STATUS_UNAUTHORIZED_ERROR).json({general: WRONG_CREDENTIALS_ERROR});
-            }
-            response.status(STATUS_SERVER_ERROR).json({error: error.code});
-
+            response.status(STATUS_UNAUTHORIZED_ERROR).json({general: WRONG_CREDENTIALS_ERROR});
             throw new Error(error);
         })
 };
@@ -130,6 +135,26 @@ export const getAuthUser = (request: any, response: Response) => {
         .then(data => {
             userData.likes = [];
             data.forEach(doc => userData.likes!.push(doc.data() as UserLike));
+            return db.collection(NOTIFICATIONS_COLLECTION)
+                .where("recipient", "==", request.user.handle)
+                .orderBy("creationTime", "desc")
+                .limit(10).get();
+        })
+        .then(data => {
+            const notifications: Notification[] = [];
+            data.forEach(doc => {
+                const docData = doc.data();
+                notifications.push({
+                    creationTime: docData.creationTime,
+                    recipient: docData.recipient,
+                    sender: docData.sender,
+                    type: docData.type,
+                    read: docData.read,
+                    postId: docData.postId,
+                    notificationId: doc.id
+                })
+            });
+            userData.notifications = notifications;
             return response.json(userData);
         })
         .catch(error => {
@@ -177,6 +202,61 @@ export const uploadImage = (request: any & {rawBody: any}, response: Response) =
     });
 
     busBoy.end(request.rawBody);
+};
+
+export const getUserDetails = (request: any, response: Response) => {
+    const userData: {user?: any, posts?: PostData[]} = {};
+    db.doc(`/${USERS_COLLECTION}/${request.params.handle}`).get()
+        .then(doc => {
+            if (doc.exists) {
+                userData.user = doc.data();
+                return db.collection(POSTS_COLLECTION)
+                    .where("userName", "==", request.params.handle)
+                    .orderBy("creationTime", "desc")
+                    .get()
+            }
+            return null;
+        })
+        .then(data => {
+            if (data) {
+                const posts: PostData[] = [];
+                data.forEach(doc => {
+                    const docData = doc.data();
+                    posts.push({
+                        postId: doc.id,
+                        creationTime: docData.creationTime,
+                        userName: docData.userName,
+                        userImage: docData.userImage,
+                        likeCount: docData.likeCount,
+                        commentCount: docData.commentCount,
+                        message: docData.message,
+                        comments: []
+                    })
+                });
+                userData.posts = posts;
+                response.json(userData);
+            } else {
+                response.status(STATUS_NOT_FOUND_ERROR).json({error: "User not found"})
+            }
+        })
+        .catch(error => {
+            response.status(STATUS_SERVER_ERROR).json({error: error.code});
+            throw new Error(error);
+        })
+};
+
+export const markNotificationsRead = (request: Request, response: Response) => {
+    const batch = db.batch();
+    request.body.forEach((notificationId: string) => {
+        const notification = db.doc(`/${NOTIFICATIONS_COLLECTION}/${notificationId}`);
+        batch.update(notification, {read: true});
+    });
+    batch.commit()
+        .then(() => response.json({message: "Notification marked read"}))
+        .catch(error => {
+            response.status(STATUS_SERVER_ERROR).json({error: error.code});
+            throw new Error(error);
+        })
 };
 
 const generateImageUrl = (imageName: string): string => {

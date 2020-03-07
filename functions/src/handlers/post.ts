@@ -11,7 +11,7 @@ import {
     STATUS_UNAUTHORIZED_ERROR
 } from "../domain.constants";
 import { Request, Response } from "express";
-import { EMPTY_ERROR, POST_NOT_FOUND, UNAUTHORIZED_ERROR } from "../errors.constants";
+import { EMPTY_ERROR, POST_NOT_FOUND, UNAUTHORIZED_ERROR, UNKNOWN_ERROR } from "../errors.constants";
 import { DocumentReference, QuerySnapshot } from "@firebase/firestore-types"
 
 export const getPosts = (request: Request, response: Response) => {
@@ -101,7 +101,7 @@ export const deletePost = (request: any, response: Response) => {
 
 export const commentOnPost = (request: any, response: Response) => {
     if ((request.body.message as string).trim() === "") {
-        response.status(STATUS_CLIENT_ERROR).json({error: EMPTY_ERROR})
+        response.status(STATUS_CLIENT_ERROR).json({comment: EMPTY_ERROR})
     } else {
         const newComment: CommentData = {
             message: request.body.message,
@@ -129,7 +129,7 @@ export const commentOnPost = (request: any, response: Response) => {
                 }
             })
             .catch(error => {
-                response.status(STATUS_SERVER_ERROR).json({error: "Something went wrong"});
+                response.status(STATUS_SERVER_ERROR).json({error: UNKNOWN_ERROR});
                 throw new Error(error);
             })
     }
@@ -140,7 +140,7 @@ export const likePost = (request: any, response: Response) => {
         if (data.empty) {
             db.collection(LIKES_COLLECTION).add({
                 postId: request.params.postId,
-                userHandle: request.user.handle
+                userName: request.user.handle
             }).then(() => {
                 postData.likeCount++;
                 return postDoc.update({likeCount: postData.likeCount})
@@ -173,7 +173,7 @@ export const unlikePost = (request: any, response: Response) => {
 
 const likeOrUnlikePost = (request: any, response: Response, context: (postData: PostData, data: QuerySnapshot, postDoc: DocumentReference) => void) => {
     const likeDoc = db.collection(LIKES_COLLECTION)
-        .where("userHandle", "==", request.user.handle)
+        .where("userName", "==", request.user.handle)
         .where("postId", "==", request.params.postId)
         .limit(1);
     const postDoc = db.doc(`/${POSTS_COLLECTION}/${request.params.postId}`);

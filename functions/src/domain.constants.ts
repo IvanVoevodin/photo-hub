@@ -11,6 +11,7 @@ export const POSTS_COLLECTION = "posts";
 export const COMMENTS_COLLECTION = "comments";
 export const USERS_COLLECTION = "users";
 export const LIKES_COLLECTION = "likes";
+export const NOTIFICATIONS_COLLECTION = "notifications";
 
 export interface UserInfo {
     readonly email: string;
@@ -41,6 +42,7 @@ export interface UserLike {
 export interface UserFullInfo {
     credentials?: Credentials;
     likes?: UserLike[];
+    notifications?: Notification[];
 }
 
 export interface PostData {
@@ -60,6 +62,20 @@ export interface CommentData {
     readonly userImage: string,
     readonly message: string,
     readonly creationTime: string
+}
+
+export const NOTIFICATION_LIKE = "like";
+export const NOTIFICATION_COMMENT = "comment";
+export type NotificationType = typeof NOTIFICATION_LIKE | typeof NOTIFICATION_COMMENT
+
+export interface Notification {
+    notificationId?: string,
+    readonly creationTime: string,
+    readonly recipient: string,
+    readonly sender: string,
+    readonly type: NotificationType,
+    readonly read: boolean,
+    readonly postId: string
 }
 
 export const USER_EMPTY_IMAGE = "no-image.png";
