@@ -7,6 +7,7 @@ import Home from "./pages/home.page";
 import Login from "./pages/login.page";
 import Signup from "./pages/signup.page";
 import NavigationBar from "./components/navigation-bar.component";
+import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "./constant/app-route.constant";
 
 const theme = createMuiTheme({
     palette: {
@@ -33,9 +34,9 @@ const App: React.FC = () => {
                     <NavigationBar/>
                     <div className="container">
                         <Switch>
-                            <Route exact path="/" component={Home}/>
-                            <Route path="/login" component={Login}/>
-                            <Route path="/signup" component={Signup}/>
+                            <Route exact path={HOME_ROUTE} component={Home}/>
+                            <Route path={LOGIN_ROUTE} component={Login}/>
+                            <Route path={SIGNUP_ROUTE} component={Signup}/>
                         </Switch>
                     </div>
                 </Router>
