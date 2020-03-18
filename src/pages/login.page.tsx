@@ -9,6 +9,7 @@ import { Link, useHistory } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { LOGIN_ROUT } from "../constant/rest-api.constant";
 import { HOME_ROUTE, SIGNUP_ROUTE } from "../constant/app-route.constant";
+import LoginIcon from "../images/login-icon.png";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -16,7 +17,8 @@ const useStyles = makeStyles(() =>
             textAlign: "center"
         },
         image: {
-            margin: "20px auto 20px auto"
+            height: "164px",
+            marginTop: "20px"
         },
         textField: {
             margin: "10px auto 10px auto"
@@ -25,8 +27,7 @@ const useStyles = makeStyles(() =>
             margin: "10px auto 10px auto"
         },
         button: {
-            marginTop: 20,
-            position: "relative"
+            margin: "20px auto 10px auto"
         },
         customError: {
             color: "red",
@@ -34,7 +35,7 @@ const useStyles = makeStyles(() =>
             marginTop: 10
         },
         progress: {
-            position: "absolute"
+            margin: "20px auto 10px auto"
         }
     })
 );
@@ -72,6 +73,7 @@ const Login: React.FC = () => {
         <Grid container className={classes.form}>
             <Grid item sm/>
             <Grid item sm>
+                <img src={LoginIcon} alt="Login" className={classes.image}/>
                 <Typography variant="h2" className={classes.pageTitle}>
                     Login
                 </Typography>
@@ -83,10 +85,10 @@ const Login: React.FC = () => {
                                helperText={errors.password} error={!!errors.password}
                                value={password} onChange={event => setPassword(event.target.value)}/>
                     {errors.general && (<Typography variant="body2" className={classes.customError}>{errors.general}</Typography>)}
-                    <Button type="submit" variant="contained" color="secondary" className={classes.button} disabled={loading}>
+                    <Button type="submit" variant="contained" color="secondary" className={classes.button} style={loading ? {display: "none"} : {}}>
                         Login
-                        {loading && (<CircularProgress className={classes.progress}/>)}
                     </Button>
+                    {loading && (<CircularProgress className={classes.progress}/>)}
                     <br/>
                     <small>Dont have a account? Sing up <Link to={SIGNUP_ROUTE}>here</Link></small>
                 </form>
