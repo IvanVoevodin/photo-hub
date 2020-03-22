@@ -29,7 +29,7 @@ const useStyles = makeStyles(() =>
 );
 
 interface PostProps {
-    post: PostType
+    readonly post: PostType
 }
 
 const Post: React.FC<PostProps> = (props: PostProps) => {

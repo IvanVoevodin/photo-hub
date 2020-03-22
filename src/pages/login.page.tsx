@@ -10,34 +10,11 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { LOGIN_ROUT } from "../constant/rest-api.constant";
 import { HOME_ROUTE, SIGNUP_ROUTE } from "../constant/app-route.constant";
 import LoginIcon from "../images/login-icon.png";
+import { FB_TOKEN_KEY } from "../constant/domain.constant";
+import authStyle from "../styles/auth.style"
 
 const useStyles = makeStyles(() =>
-    createStyles({
-        form: {
-            textAlign: "center"
-        },
-        image: {
-            height: "164px",
-            marginTop: "20px"
-        },
-        textField: {
-            margin: "10px auto 10px auto"
-        },
-        pageTitle: {
-            margin: "10px auto 10px auto"
-        },
-        button: {
-            margin: "20px auto 10px auto"
-        },
-        customError: {
-            color: "red",
-            fontSize: "0.8rem",
-            marginTop: 10
-        },
-        progress: {
-            margin: "20px auto 10px auto"
-        }
-    })
+    createStyles(authStyle)
 );
 
 interface LoginError {
@@ -60,7 +37,8 @@ const Login: React.FC = () => {
         axios.post(LOGIN_ROUT, {
             email,
             password
-        }).then(() => {
+        }).then(response => {
+            localStorage.setItem(FB_TOKEN_KEY, `Bearer ${response.data.token}`);
             setLoading(false);
             history.push(HOME_ROUTE);
         }).catch(error => {
@@ -85,10 +63,10 @@ const Login: React.FC = () => {
                                helperText={errors.password} error={!!errors.password}
                                value={password} onChange={event => setPassword(event.target.value)}/>
                     {errors.general && (<Typography variant="body2" className={classes.customError}>{errors.general}</Typography>)}
-                    <Button type="submit" variant="contained" color="secondary" className={classes.button} style={loading ? {display: "none"} : {}}>
+                    <Button type="submit" variant="contained" color="secondary" className={classes.button} disabled={loading}>
                         Login
+                        {loading && (<CircularProgress size={24} className={classes.progress}/>)}
                     </Button>
-                    {loading && (<CircularProgress className={classes.progress}/>)}
                     <br/>
                     <small>Dont have a account? Sing up <Link to={SIGNUP_ROUTE}>here</Link></small>
                 </form>

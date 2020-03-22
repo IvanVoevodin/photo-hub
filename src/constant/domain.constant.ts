@@ -8,3 +8,16 @@ export interface Post {
     readonly creationTime: string,
     readonly message: string
 }
+
+export interface TokenDto {
+    readonly iss: string
+    readonly aud: string
+    readonly sub: string
+    readonly iat: number
+    readonly exp: number
+    readonly email: string
+}
+
+const FB_TOKEN_KEY = "fbTokenId";
+
+export default FB_TOKEN_KEY
