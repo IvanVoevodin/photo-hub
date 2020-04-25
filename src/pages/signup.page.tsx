@@ -19,17 +19,13 @@ const useStyles = makeStyles(() =>
 
 const Signup: React.FC = () => {
     const classes = useStyles();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [handle, setHandle] = useState("");
 
-    const {loading, signupErrors} = useSelector<ReducerStateProp, UiSignupState>((state: ReducerStateProp) => {
-        return {
-            loading: state.ui.loading,
-            signupErrors: state.ui.signupErrors
-        }
-    }, shallowEqual);
+    const {loading, signupErrors} = useSelector<ReducerStateProp, UiSignupState>(state => state.ui, shallowEqual);
 
     const history = useHistory();
     const dispatch = useDispatch();

@@ -28,6 +28,9 @@ export interface SetUserAuthAction extends BaseAction<typeof AUTHENTICATED> {
 export interface SetUserUnauthAction extends BaseAction<typeof UNAUTHENTICATED> {
 }
 
+export interface LoadingUserAction extends BaseAction<typeof LOADING_USER> {
+}
+
 // UI actions
 export interface LoadingUiAction extends BaseAction<typeof LOADING_UI> {
     readonly loading: boolean
@@ -45,10 +48,11 @@ export interface ClearErrorsAction extends BaseAction<typeof CLEAR_ERRORS> {
 }
 
 export type UiActionType = LoadingUiAction | LoginErrorsAction | SignupErrorsAction | ClearErrorsAction
-export type UserActionType = SetUserDataAction | SetUserAuthAction | SetUserUnauthAction
+export type UserActionType = SetUserDataAction | SetUserAuthAction | SetUserUnauthAction | LoadingUserAction
 
 export interface UserSate {
     readonly authenticated: boolean
+    readonly loading: boolean
     readonly credentials: UserCredentials
     readonly likes: []
     readonly notifications: []

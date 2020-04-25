@@ -4,6 +4,7 @@ import axios from "axios";
 import { Post as PostType } from "../constant/domain.constant";
 import Post from "../components/post.component";
 import { POSTS_ROUT } from "../constant/rest-api.constant";
+import Profile from "../components/profile.component";
 
 const Home: React.FC = () => {
     const [posts, setPosts] = useState<PostType[]>([]);
@@ -24,7 +25,7 @@ const Home: React.FC = () => {
                 {recentPostsMarkup}
             </Grid>
             <Grid item sm={4} xs={12}>
-                <p>Profile</p>
+                <Profile/>
             </Grid>
         </Grid>
     )

@@ -23,12 +23,7 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const {loading, loginErrors} = useSelector<ReducerStateProp, UiLoginState>((state: ReducerStateProp) => {
-        return {
-            loading: state.ui.loading,
-            loginErrors: state.ui.loginErrors
-        }
-    }, shallowEqual);
+    const {loading, loginErrors} = useSelector<ReducerStateProp, UiLoginState>(state => state.ui, shallowEqual);
 
     const history = useHistory();
     const dispatch = useDispatch();

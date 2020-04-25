@@ -24,6 +24,9 @@ export interface UserCredentials {
     readonly imageUrl: string
     readonly uid: string
     readonly creationTime: string
+    readonly bio?: string
+    readonly location?: string
+    readonly website?: string
 }
 
 export interface UserData {

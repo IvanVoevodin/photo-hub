@@ -2,11 +2,12 @@ import axios from "axios";
 import { History } from "history";
 import { Dispatch } from "redux";
 import { AUTH_HEADER, FB_TOKEN_KEY, LoginData, SignupData } from "../../constant/domain.constant";
-import { AUTHENTICATED, CLEAR_ERRORS, LOADING_UI, LOGIN_ERRORS, SET_USER, SIGNUP_ERRORS, UiActionType, UNAUTHENTICATED, UserActionType } from "../redux.constant";
+import { AUTHENTICATED, CLEAR_ERRORS, LOADING_UI, LOADING_USER, LOGIN_ERRORS, SET_USER, SIGNUP_ERRORS, UiActionType, UNAUTHENTICATED, UserActionType } from "../redux.constant";
 import { LOGIN_ROUT, SIGNUP_ROUT, USER_DATA_ROUT } from "../../constant/rest-api.constant";
 import { HOME_ROUTE } from "../../constant/app-route.constant";
 
 const updateUserData = (dispatch: Dispatch<UserActionType>) => {
+    dispatch({type: LOADING_USER});
     axios.get(USER_DATA_ROUT)
         .then(response => {
             dispatch({
