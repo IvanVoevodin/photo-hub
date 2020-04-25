@@ -18,6 +18,45 @@ export interface TokenDto {
     readonly email: string
 }
 
-const FB_TOKEN_KEY = "fbTokenId";
+export interface UserCredentials {
+    readonly handle: string
+    readonly email: string
+    readonly imageUrl: string
+    readonly uid: string
+    readonly creationTime: string
+}
 
-export default FB_TOKEN_KEY
+export interface UserData {
+    readonly credentials: UserCredentials,
+    readonly likes: [],
+    readonly notifications: []
+}
+
+export interface LoginData {
+    readonly email: string
+    readonly password: string
+}
+
+export interface SignupData {
+    readonly email: string
+    readonly password: string
+    readonly confirmPassword: string
+    readonly handle: string
+}
+
+export interface LoginError {
+    readonly email?: string;
+    readonly password?: string;
+    readonly general?: string;
+}
+
+export interface SignupError {
+    readonly email?: string;
+    readonly password?: string;
+    readonly confirmPassword?: string;
+    readonly error?: string;
+    readonly handle?: string;
+}
+
+export const AUTH_HEADER = "Authorization";
+export const FB_TOKEN_KEY = "fbTokenId";
