@@ -1,9 +1,9 @@
 import axios from "axios";
 import { History } from "history";
 import { Dispatch } from "redux";
-import { AUTH_HEADER, FB_TOKEN_KEY, LoginData, SignupData } from "../../constant/domain.constant";
+import { AUTH_HEADER, FB_TOKEN_KEY, LoginData, SignupData, UserCredentials } from "../../constant/domain.constant";
 import { AUTHENTICATED, CLEAR_ERRORS, LOADING_UI, LOADING_USER, LOGIN_ERRORS, SET_USER, SIGNUP_ERRORS, UiActionType, UNAUTHENTICATED, UserActionType } from "../redux.constant";
-import { LOGIN_ROUT, SIGNUP_ROUT, USER_DATA_ROUT } from "../../constant/rest-api.constant";
+import { LOGIN_ROUT, SIGNUP_ROUT, USER_DATA_ROUT, USER_IMAGE_ROUT } from "../../constant/rest-api.constant";
 import { HOME_ROUTE } from "../../constant/app-route.constant";
 
 const updateUserData = (dispatch: Dispatch<UserActionType>) => {
@@ -70,4 +70,16 @@ export const logoutUser = (dispatch: Dispatch<UserActionType>) => {
     dispatch({type: UNAUTHENTICATED})
 };
 
+export const uploadImage = (formData: FormData, dispatch: Dispatch<UserActionType>) => {
+    dispatch({type: LOADING_USER});
+    axios.post(USER_IMAGE_ROUT, formData)
+        .then(() => updateUserData(dispatch))
+        .catch(error => new Error(error))
+};
 
+export const editUserDetails = (userDetails: UserCredentials, dispatch: Dispatch<UserActionType>) => {
+    dispatch({type: LOADING_USER});
+    axios.post(USER_DATA_ROUT, userDetails)
+        .then(() => updateUserData(dispatch))
+        .catch(error => new Error(error))
+};

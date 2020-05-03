@@ -30,9 +30,6 @@ const profileStyle: StyleRules = {
                 color: "#00bcd4"
             }
         },
-        "& .calendar-wrapper": {
-            textAlign: "center"
-        },
         "& hr": {
             border: "none",
             margin: "0 0 10px 0"

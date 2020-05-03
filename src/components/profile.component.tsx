@@ -1,16 +1,20 @@
-import React from "react";
-import { shallowEqual, useSelector } from "react-redux";
+import React, { ChangeEvent } from "react"
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 import { Link as ReactLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import { CalendarToday, Link as LinkIcon, LocationOn } from "@material-ui/icons";
+import { CalendarToday, Edit as EditIcon, KeyboardReturn, Link as LinkIcon, LocationOn } from "@material-ui/icons";
 import dayjs from "dayjs";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton"
+import Tooltip from "@material-ui/core/Tooltip";
 import { LOGIN_ROUTE, SIGNUP_ROUTE, USERS_ROUTE } from "../constant/app-route.constant";
 import profileStyle from "../styles/profile.style";
 import { ReducerStateProp, UserSate } from "../redux/redux.constant";
+import { logoutUser, uploadImage } from "../redux/actions/user.action";
+import EditDetails from "./edit-details.component";
 
 const useStyles = makeStyles(() =>
     createStyles(profileStyle)
@@ -20,46 +24,77 @@ const Profile: React.FC = () => {
     const classes = useStyles();
 
     const {authenticated, loading, credentials} = useSelector<ReducerStateProp, UserSate>(state => state.user, shallowEqual);
+    const dispatch = useDispatch();
 
     if (loading) {
         return <p>loading...</p>
     }
+
+    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const image = event.target.files?.item(0);
+        if (image) {
+            const formData = new FormData();
+            formData.append("image", image, image.name);
+            uploadImage(formData, dispatch);
+        }
+    };
+
+    const handleEditPicture = () => {
+        const fileEdit = document.getElementById("imageInput");
+        if (fileEdit) {
+            fileEdit.click()
+        }
+    };
+
+    const handleLogout = () => {
+        logoutUser(dispatch)
+    };
 
     return authenticated ? (
         <Paper className={classes.paper}>
             <div className={classes.profile}>
                 <div className="image-wrapper">
                     <img src={credentials.imageUrl} alt="Profile" className="profile-image"/>
+                    <input type="file" id="imageInput" hidden onChange={handleImageChange}/>
+                    <Tooltip title="Edit profile picture" placement="bottom">
+                        <IconButton className="button" onClick={handleEditPicture}>
+                            <EditIcon color="primary"/>
+                        </IconButton>
+                    </Tooltip>
                 </div>
                 <hr/>
                 <div className="profile-details">
                     <Link component={ReactLink} to={`${USERS_ROUTE}/${credentials.handle}`} color="primary" variant="h5">
                         @{credentials.handle}
                     </Link>
-                </div>
-                <hr/>
-                {credentials.bio && <Typography variant="body2">{credentials.bio}</Typography>}
-                <hr/>
-                {credentials.location && (
-                    <>
-                        <LocationOn color="primary"/>
-                        <span>credentials.location</span>
-                        <hr/>
-                    </>
-                )}
-                {credentials.website && (
-                    <>
-                        <LinkIcon color="primary"/>
-                        <a href={credentials.website} target="_blank" rel="noopener noreferrer">
-                            {credentials.website}
-                        </a>
-                        <hr/>
-                    </>
-                )}
-                <div className="calendar-wrapper">
+                    <hr/>
+                    {credentials.bio && <Typography variant="body2">{credentials.bio}</Typography>}
+                    <hr/>
+                    {credentials.location && (
+                        <>
+                            <LocationOn color="primary"/>
+                            <span>{credentials.location}</span>
+                            <hr/>
+                        </>
+                    )}
+                    {credentials.website && (
+                        <>
+                            <LinkIcon color="primary"/>
+                            <a href={credentials.website} target="_blank" rel="noopener noreferrer">
+                                {credentials.website}
+                            </a>
+                            <hr/>
+                        </>
+                    )}
                     <CalendarToday color="primary" style={{paddingRight: "5px"}}/>
                     <span>Joined {dayjs(credentials.creationTime).format("MMM YYYY")}</span>
                 </div>
+                <Tooltip title="Logout" placement="bottom">
+                    <IconButton onClick={handleLogout}>
+                        <KeyboardReturn color="primary"/>
+                    </IconButton>
+                </Tooltip>
+                <EditDetails credentials={credentials}/>
             </div>
         </Paper>
     ) : (
