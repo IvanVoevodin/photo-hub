@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
-import axios from "axios";
-import { Post as PostType } from "../constant/domain.constant";
+import { useDispatch, useSelector } from "react-redux";
 import Post from "../components/post.component";
-import { POSTS_ROUT } from "../constant/rest-api.constant";
 import Profile from "../components/profile.component";
+import { updatePosts } from "../redux/actions/data.action";
+import { DataState, ReducerStateProp } from "../redux/redux.constant";
 
 const Home: React.FC = () => {
-    const [posts, setPosts] = useState<PostType[]>([]);
+    const dispatch = useDispatch();
+
+    const {posts, loading} = useSelector<ReducerStateProp, DataState>(state => state.data);
 
     useEffect(() => {
-        axios.get(POSTS_ROUT)
-            .then(response => setPosts(response.data))
-            .catch(error => new Error(error))
-    }, []);
+        updatePosts(dispatch);
+    }, [dispatch]);
 
-    const recentPostsMarkup = posts.length ?
+    const recentPostsMarkup = !loading ?
         posts.map(post => <Post key={post.postId} post={post}/>) :
         <p>Loading...</p>;
 

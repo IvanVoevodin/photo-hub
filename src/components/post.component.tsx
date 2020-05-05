@@ -7,8 +7,13 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Link } from "react-router-dom";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { Chat as ChatIcon, Favorite as FavoriteIcon, FavoriteBorder } from "@material-ui/icons";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Post as PostType } from "../constant/domain.constant";
-import { USERS_ROUTE } from "../constant/app-route.constant";
+import { LOGIN_ROUTE, USERS_ROUTE } from "../constant/app-route.constant";
+import IconTooltipButton from "./icon-tooltip-button.component";
+import { ReducerStateProp, UserSate } from "../redux/redux.constant";
+import { likePost, unlikePost } from "../redux/actions/data.action";
 
 dayjs.extend(relativeTime);
 
@@ -34,8 +39,33 @@ interface PostProps {
 
 const Post: React.FC<PostProps> = (props: PostProps) => {
     const {post} = props;
-    const {userName, userImage, message, creationTime} = post;
+    const {postId, userName, userImage, message, creationTime, likeCount} = post;
     const classes = useStyles();
+    const dispatch = useDispatch();
+
+    const {authenticated, likes} = useSelector<ReducerStateProp, UserSate>(state => state.user, shallowEqual);
+
+    const isPostLiked = (): boolean => !!likes.find(like => like.postId === postId);
+    const likeThisPost = () => likePost(postId, dispatch);
+    const unlikeThisPost = () => unlikePost(postId, dispatch);
+
+    const authLikeButton = isPostLiked() ? (
+        <IconTooltipButton title="Unlike" onClick={unlikeThisPost}>
+            <FavoriteIcon color="primary"/>
+        </IconTooltipButton>
+    ) : (
+        <IconTooltipButton title="Like" onClick={likeThisPost}>
+            <FavoriteBorder color="primary"/>
+        </IconTooltipButton>
+    );
+
+    const likeButton = !authenticated ? (
+        <IconTooltipButton title="Like">
+            <Link to={LOGIN_ROUTE}>
+                <FavoriteBorder color="primary"/>
+            </Link>
+        </IconTooltipButton>
+    ) : authLikeButton;
 
     return (
         <Card className={classes.card}>
@@ -44,6 +74,11 @@ const Post: React.FC<PostProps> = (props: PostProps) => {
                 <Typography variant="h5" component={Link} to={`${USERS_ROUTE}/${userName}`} color="primary">{userName}</Typography>
                 <Typography variant="body2" color="textSecondary">{dayjs(creationTime).fromNow()}</Typography>
                 <Typography variant="body1">{message}</Typography>
+                {likeButton}
+                <span>{likeCount} Likes</span>
+                <IconTooltipButton title="Comments">
+                    <ChatIcon color="primary"/>
+                </IconTooltipButton>
             </CardContent>
         </Card>
     )

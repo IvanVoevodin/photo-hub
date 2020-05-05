@@ -1,17 +1,26 @@
 import { Action } from "redux";
-import { LoginError, SignupError, UserCredentials, UserData } from "../constant/domain.constant";
+import { LoginError, Post, SignupError, UserCredentials, UserData, UserLike } from "../constant/domain.constant";
 
 // User reducer types
 export const AUTHENTICATED = "AUTHENTICATED";
 export const UNAUTHENTICATED = "UNAUTHENTICATED";
 export const SET_USER = "SET_USER";
 export const LOADING_USER = "LOADING_USER";
+export const UPDATE_LIKE = "update-like";
+export const UPDATE_UNLIKE = "update-unlike";
 
 // UI reducer types
 export const LOGIN_ERRORS = "LOGIN_ERRORS";
 export const SIGNUP_ERRORS = "SIGNUP_ERRORS";
 export const LOADING_UI = "LOADING_UI";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
+
+// Data reducer types
+export const LOADING_DATA = "loading-data";
+export const UPDATE_POSTS = "update-posts";
+export const CREATE_POST = "create-post";
+export const LIKE_POST = "like-post";
+export const UNLIKE_POST = "unlike-post";
 
 export interface BaseAction<T> extends Action {
     readonly type: T
@@ -31,6 +40,16 @@ export interface SetUserUnauthAction extends BaseAction<typeof UNAUTHENTICATED> 
 export interface LoadingUserAction extends BaseAction<typeof LOADING_USER> {
 }
 
+interface BaseUpdateLikeAction<T extends typeof UPDATE_LIKE | typeof UPDATE_UNLIKE> extends BaseAction<T> {
+    readonly post: Post
+}
+
+export interface UpdateLikeAction extends BaseUpdateLikeAction<typeof UPDATE_LIKE> {
+}
+
+export interface UpdateUnlikeAction extends BaseUpdateLikeAction<typeof UPDATE_UNLIKE> {
+}
+
 // UI actions
 export interface LoadingUiAction extends BaseAction<typeof LOADING_UI> {
     readonly loading: boolean
@@ -47,15 +66,43 @@ export interface SignupErrorsAction extends BaseAction<typeof SIGNUP_ERRORS> {
 export interface ClearErrorsAction extends BaseAction<typeof CLEAR_ERRORS> {
 }
 
+// Data actions
+export interface LoadingDataAction extends BaseAction<typeof LOADING_DATA> {
+}
+
+export interface UpdatePostsAction extends BaseAction<typeof UPDATE_POSTS> {
+    readonly posts: Post[]
+}
+
+export interface CreatePostAction extends BaseAction<typeof CREATE_POST> {
+}
+
+interface BaseLikePostAction<T extends typeof LIKE_POST | typeof UNLIKE_POST> extends BaseAction<T> {
+    readonly post: Post
+}
+
+export interface LikePostAction extends BaseLikePostAction<typeof LIKE_POST> {
+}
+
+export interface UnlikePostAction extends BaseLikePostAction<typeof UNLIKE_POST> {
+}
+
 export type UiActionType = LoadingUiAction | LoginErrorsAction | SignupErrorsAction | ClearErrorsAction
-export type UserActionType = SetUserDataAction | SetUserAuthAction | SetUserUnauthAction | LoadingUserAction
+export type UserActionType = SetUserDataAction | SetUserAuthAction | SetUserUnauthAction | LoadingUserAction | UpdateLikeAction | UpdateUnlikeAction
+export type DataActionType = LoadingDataAction | UpdatePostsAction | CreatePostAction | LikePostAction | UnlikePostAction
 
 export interface UserSate {
     readonly authenticated: boolean
     readonly loading: boolean
     readonly credentials: UserCredentials
-    readonly likes: []
+    readonly likes: UserLike[]
     readonly notifications: []
+}
+
+export interface DataState {
+    readonly posts: Post[]
+    readonly loading: boolean
+    readonly post?: Post
 }
 
 export interface UiState {
@@ -74,5 +121,6 @@ export interface UiGeneralState extends UiLoginState, UiSignupState {}
 
 export interface ReducerStateProp {
     user: UserSate
-    ui: UiGeneralState
+    ui: UiGeneralState,
+    data: DataState
 }

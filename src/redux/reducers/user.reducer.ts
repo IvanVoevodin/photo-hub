@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { AUTHENTICATED, LOADING_USER, SET_USER, UNAUTHENTICATED, UserActionType, UserSate } from "../redux.constant";
+import { AUTHENTICATED, LOADING_USER, SET_USER, UNAUTHENTICATED, UPDATE_LIKE, UPDATE_UNLIKE, UserActionType, UserSate } from "../redux.constant";
 
 const initialState: UserSate = {
     authenticated: false,
@@ -31,6 +31,22 @@ const userReducer: Reducer<UserSate, UserActionType> = (state = initialState, ac
             return {...state, authenticated: false};
         case LOADING_USER:
             return {...state, loading: true};
+        case UPDATE_LIKE:
+            return {
+                ...state,
+                likes: [
+                    ...state.likes,
+                    {
+                        userName: state.credentials.handle,
+                        postId: action.post.postId
+                    }
+                ]
+            };
+        case UPDATE_UNLIKE:
+            return {
+                ...state,
+                likes: state.likes.filter(like => like.postId !== action.post.postId)
+            };
         default:
             return state
     }

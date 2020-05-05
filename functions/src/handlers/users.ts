@@ -130,7 +130,7 @@ export const getAuthUser = (request: any, response: Response) => {
             }
 
             userData.credentials = doc.data() as Credentials;
-            return db.collection(LIKES_COLLECTION).where("userHandle", "==", request.user.handle).get();
+            return db.collection(LIKES_COLLECTION).where("userName", "==", request.user.handle).get();
         })
         .then(data => {
             userData.likes = [];

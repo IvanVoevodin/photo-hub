@@ -29,9 +29,14 @@ export interface UserCredentials {
     readonly website?: string
 }
 
+export interface UserLike {
+    readonly userName: string
+    readonly postId: string
+}
+
 export interface UserData {
     readonly credentials: UserCredentials,
-    readonly likes: [],
+    readonly likes: UserLike[],
     readonly notifications: []
 }
 
