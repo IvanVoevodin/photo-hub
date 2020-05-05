@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { Tooltip } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
 import { Edit as EditIcon } from "@material-ui/icons";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -12,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import { useDispatch } from "react-redux";
 import { editUserDetails } from "../redux/actions/user.action";
 import { UserCredentials } from "../constant/domain.constant";
+import IconTooltipButton from "./icon-tooltip-button.component";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -66,11 +65,9 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
 
     return (
         <>
-            <Tooltip title="Edit details" placement="bottom">
-                <IconButton onClick={handleOpen} className={classes.button}>
-                    <EditIcon color="primary"/>
-                </IconButton>
-            </Tooltip>
+            <IconTooltipButton title="Edit details" onClick={handleOpen} buttonStyleName={classes.button}>
+                <EditIcon color="primary"/>
+            </IconTooltipButton>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                 <DialogTitle>Edit your details</DialogTitle>
                 <DialogContent>

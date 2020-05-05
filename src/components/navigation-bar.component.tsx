@@ -5,7 +5,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { shallowEqual, useSelector } from "react-redux";
+import { Add as AddIcon, Home as HomeIcon, Notifications as NotificationsIcon } from "@material-ui/icons";
 import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "../constant/app-route.constant";
+import { ReducerStateProp, UserSate } from "../redux/redux.constant";
+import IconTooltipButton from "./icon-tooltip-button.component";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -21,14 +25,39 @@ const useStyles = makeStyles(() =>
 const NavigationBar: React.FC = () => {
     const classes = useStyles();
 
+    const {authenticated} = useSelector<ReducerStateProp, UserSate>((state: ReducerStateProp) => {
+        return {
+            authenticated: state.user.authenticated,
+            ...state.user
+        }
+    }, shallowEqual);
+
     return (
         <div className={classes.root}>
             <AppBar>
-                <Toolbar>
+                <Toolbar className="nav-container">
                     <Typography variant="h6" className={classes.title}>Photo Hub</Typography>
-                    <Button color="inherit" component={Link} to={HOME_ROUTE}>Home</Button>
-                    <Button color="inherit" component={Link} to={LOGIN_ROUTE}>Login</Button>
-                    <Button color="inherit" component={Link} to={SIGNUP_ROUTE}>Signup</Button>
+                    {authenticated ? (
+                        <>
+                            <IconTooltipButton title="Make a post">
+                                <AddIcon/>
+                            </IconTooltipButton>
+                            <Link to={HOME_ROUTE}>
+                                <IconTooltipButton title="Home">
+                                    <HomeIcon/>
+                                </IconTooltipButton>
+                            </Link>
+                            <IconTooltipButton title="Notifications">
+                                <NotificationsIcon/>
+                            </IconTooltipButton>
+                        </>
+                    ) : (
+                        <>
+                            <Button color="inherit" component={Link} to={HOME_ROUTE}>Home</Button>
+                            <Button color="inherit" component={Link} to={LOGIN_ROUTE}>Login</Button>
+                            <Button color="inherit" component={Link} to={SIGNUP_ROUTE}>Signup</Button>
+                        </>
+                    )}
                 </Toolbar>
             </AppBar>
         </div>

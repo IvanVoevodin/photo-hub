@@ -8,13 +8,12 @@ import Typography from "@material-ui/core/Typography";
 import { CalendarToday, Edit as EditIcon, KeyboardReturn, Link as LinkIcon, LocationOn } from "@material-ui/icons";
 import dayjs from "dayjs";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton"
-import Tooltip from "@material-ui/core/Tooltip";
 import { LOGIN_ROUTE, SIGNUP_ROUTE, USERS_ROUTE } from "../constant/app-route.constant";
 import profileStyle from "../styles/profile.style";
 import { ReducerStateProp, UserSate } from "../redux/redux.constant";
 import { logoutUser, uploadImage } from "../redux/actions/user.action";
 import EditDetails from "./edit-details.component";
+import IconTooltipButton from "./icon-tooltip-button.component";
 
 const useStyles = makeStyles(() =>
     createStyles(profileStyle)
@@ -56,11 +55,9 @@ const Profile: React.FC = () => {
                 <div className="image-wrapper">
                     <img src={credentials.imageUrl} alt="Profile" className="profile-image"/>
                     <input type="file" id="imageInput" hidden onChange={handleImageChange}/>
-                    <Tooltip title="Edit profile picture" placement="bottom">
-                        <IconButton className="button" onClick={handleEditPicture}>
-                            <EditIcon color="primary"/>
-                        </IconButton>
-                    </Tooltip>
+                    <IconTooltipButton title="Edit profile picture" onClick={handleEditPicture} buttonStyleName="button">
+                        <EditIcon color="primary"/>
+                    </IconTooltipButton>
                 </div>
                 <hr/>
                 <div className="profile-details">
@@ -89,11 +86,9 @@ const Profile: React.FC = () => {
                     <CalendarToday color="primary" style={{paddingRight: "5px"}}/>
                     <span>Joined {dayjs(credentials.creationTime).format("MMM YYYY")}</span>
                 </div>
-                <Tooltip title="Logout" placement="bottom">
-                    <IconButton onClick={handleLogout}>
-                        <KeyboardReturn color="primary"/>
-                    </IconButton>
-                </Tooltip>
+                <IconTooltipButton title="Logout" onClick={handleLogout}>
+                    <KeyboardReturn color="primary"/>
+                </IconTooltipButton>
                 <EditDetails credentials={credentials}/>
             </div>
         </Paper>
