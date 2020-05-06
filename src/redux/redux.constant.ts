@@ -19,6 +19,7 @@ export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const LOADING_DATA = "loading-data";
 export const UPDATE_POSTS = "update-posts";
 export const CREATE_POST = "create-post";
+export const DELETE_POST = "delete-post";
 export const LIKE_POST = "like-post";
 export const UNLIKE_POST = "unlike-post";
 
@@ -77,6 +78,10 @@ export interface UpdatePostsAction extends BaseAction<typeof UPDATE_POSTS> {
 export interface CreatePostAction extends BaseAction<typeof CREATE_POST> {
 }
 
+export interface DeletePostAction extends BaseAction<typeof DELETE_POST> {
+    readonly postId: string
+}
+
 interface BaseLikePostAction<T extends typeof LIKE_POST | typeof UNLIKE_POST> extends BaseAction<T> {
     readonly post: Post
 }
@@ -89,7 +94,7 @@ export interface UnlikePostAction extends BaseLikePostAction<typeof UNLIKE_POST>
 
 export type UiActionType = LoadingUiAction | LoginErrorsAction | SignupErrorsAction | ClearErrorsAction
 export type UserActionType = SetUserDataAction | SetUserAuthAction | SetUserUnauthAction | LoadingUserAction | UpdateLikeAction | UpdateUnlikeAction
-export type DataActionType = LoadingDataAction | UpdatePostsAction | CreatePostAction | LikePostAction | UnlikePostAction
+export type DataActionType = LoadingDataAction | UpdatePostsAction | CreatePostAction | DeletePostAction | LikePostAction | UnlikePostAction
 
 export interface UserSate {
     readonly authenticated: boolean

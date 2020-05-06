@@ -14,12 +14,14 @@ import { LOGIN_ROUTE, USERS_ROUTE } from "../constant/app-route.constant";
 import IconTooltipButton from "./icon-tooltip-button.component";
 import { ReducerStateProp, UserSate } from "../redux/redux.constant";
 import { likePost, unlikePost } from "../redux/actions/data.action";
+import DeletePost from "./delete-post.component";
 
 dayjs.extend(relativeTime);
 
 const useStyles = makeStyles(() =>
     createStyles({
         card: {
+            position: "relative",
             display: "flex",
             marginBottom: 20
         },
@@ -43,7 +45,7 @@ const Post: React.FC<PostProps> = (props: PostProps) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const {authenticated, likes} = useSelector<ReducerStateProp, UserSate>(state => state.user, shallowEqual);
+    const {authenticated, likes, credentials: {handle}} = useSelector<ReducerStateProp, UserSate>(state => state.user, shallowEqual);
 
     const isPostLiked = (): boolean => !!likes.find(like => like.postId === postId);
     const likeThisPost = () => likePost(postId, dispatch);
@@ -67,11 +69,16 @@ const Post: React.FC<PostProps> = (props: PostProps) => {
         </IconTooltipButton>
     ) : authLikeButton;
 
+    const deleteButton = authenticated && handle === userName ? (
+        <DeletePost postId={postId}/>
+    ) : null;
+
     return (
         <Card className={classes.card}>
             <CardMedia image={userImage} title="Profile image" className={classes.image}/>
             <CardContent className={classes.content}>
                 <Typography variant="h5" component={Link} to={`${USERS_ROUTE}/${userName}`} color="primary">{userName}</Typography>
+                {deleteButton}
                 <Typography variant="body2" color="textSecondary">{dayjs(creationTime).fromNow()}</Typography>
                 <Typography variant="body1">{message}</Typography>
                 {likeButton}

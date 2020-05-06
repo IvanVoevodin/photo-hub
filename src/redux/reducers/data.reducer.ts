@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { CREATE_POST, DataActionType, DataState, LIKE_POST, LOADING_DATA, UNLIKE_POST, UPDATE_POSTS } from "../redux.constant";
+import { CREATE_POST, DataActionType, DataState, DELETE_POST, LIKE_POST, LOADING_DATA, UNLIKE_POST, UPDATE_POSTS } from "../redux.constant";
 import { Post } from "../../constant/domain.constant";
 
 const initialState: DataState = {
@@ -10,6 +10,12 @@ const initialState: DataState = {
 const replacePost = (posts: Post[], postToReplace: Post): Post[] => {
     const index = posts.findIndex(post => post.postId === postToReplace.postId);
     posts.splice(index, 1, postToReplace);
+    return posts;
+};
+
+const removePostById = (posts: Post[], postId: string): Post[] => {
+    const index = posts.findIndex(post => post.postId === postId);
+    posts.splice(index, 1);
     return posts;
 };
 
@@ -24,6 +30,8 @@ const dataReducer: Reducer<DataState, DataActionType> = (state = initialState, a
             return {...state, posts: replacePost(Array.from(state.posts), action.post)};
         case CREATE_POST:
             return state;
+        case DELETE_POST:
+            return {...state, posts: removePostById(Array.from(state.posts), action.postId)};
         default:
             return state
     }

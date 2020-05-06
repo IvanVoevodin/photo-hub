@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import axios from "axios";
-import { DataActionType, LIKE_POST, LOADING_DATA, UNLIKE_POST, UPDATE_LIKE, UPDATE_POSTS, UPDATE_UNLIKE, UserActionType } from "../redux.constant";
+import { DataActionType, DELETE_POST, LIKE_POST, LOADING_DATA, UNLIKE_POST, UPDATE_LIKE, UPDATE_POSTS, UPDATE_UNLIKE, UserActionType } from "../redux.constant";
 import { likePostRout, POSTS_ROUT, unlikePostRout } from "../../constant/rest-api.constant";
 
 export const updatePosts = (dispatch: Dispatch<DataActionType>) => {
@@ -11,6 +11,12 @@ export const updatePosts = (dispatch: Dispatch<DataActionType>) => {
             dispatch({type: UPDATE_POSTS, posts: []});
             throw new Error(error)
         })
+};
+
+export const deletePost = (postId: string, dispatch: Dispatch<DataActionType>) => {
+    axios.delete(`${POSTS_ROUT}/${postId}`)
+        .then(() => dispatch({type: DELETE_POST, postId}))
+        .catch(error => new Error(error))
 };
 
 export const likePost = (postId: string, dispatch: Dispatch<DataActionType | UserActionType>) => {
