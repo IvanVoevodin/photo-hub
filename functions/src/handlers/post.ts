@@ -58,23 +58,27 @@ export const getPost = (request: Request, response: Response) => {
 };
 
 export const doPost = (request: any, response: Response) => {
-    const newPost: PostData = {
-        userName: request.user.handle,
-        userImage: request.user.imageUrl,
-        message: request.body.message,
-        likeCount: 0,
-        commentCount: 0,
-        comments: [],
-        creationTime: new Date().toISOString()
-    };
+    if ((request.body.message as string).trim() === "") {
+        response.status(STATUS_CLIENT_ERROR).json({error: EMPTY_ERROR})
+    } else {
+        const newPost: PostData = {
+            userName: request.user.handle,
+            userImage: request.user.imageUrl,
+            message: request.body.message,
+            likeCount: 0,
+            commentCount: 0,
+            comments: [],
+            creationTime: new Date().toISOString()
+        };
 
-    db.collection(POSTS_COLLECTION)
-        .add(newPost)
-        .then(document => response.json({message: `Document ${document.id} created successfully`}))
-        .catch(error => {
-            response.status(STATUS_SERVER_ERROR).json({error: "Error when try to create post"});
-            throw new Error(error);
-        })
+        db.collection(POSTS_COLLECTION)
+            .add(newPost)
+            .then(document => response.json({...newPost, postId: document.id}))
+            .catch(error => {
+                response.status(STATUS_SERVER_ERROR).json({error: "Error when try to create post"});
+                throw new Error(error);
+            })
+    }
 };
 
 export const deletePost = (request: any, response: Response) => {

@@ -29,7 +29,7 @@ const dataReducer: Reducer<DataState, DataActionType> = (state = initialState, a
         case UNLIKE_POST:
             return {...state, posts: replacePost(Array.from(state.posts), action.post)};
         case CREATE_POST:
-            return state;
+            return {...state, posts: [action.post, ...state.posts]};
         case DELETE_POST:
             return {...state, posts: removePostById(Array.from(state.posts), action.postId)};
         default:

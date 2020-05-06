@@ -6,10 +6,11 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { shallowEqual, useSelector } from "react-redux";
-import { Add as AddIcon, Home as HomeIcon, Notifications as NotificationsIcon } from "@material-ui/icons";
+import { Home as HomeIcon, Notifications as NotificationsIcon } from "@material-ui/icons";
 import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "../constant/app-route.constant";
 import { ReducerStateProp, UserSate } from "../redux/redux.constant";
 import IconTooltipButton from "./icon-tooltip-button.component";
+import CreatePost from "./create-post.component";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -39,9 +40,7 @@ const NavigationBar: React.FC = () => {
                     <Typography variant="h6" className={classes.title}>Photo Hub</Typography>
                     {authenticated ? (
                         <>
-                            <IconTooltipButton title="Make a post">
-                                <AddIcon/>
-                            </IconTooltipButton>
+                            <CreatePost/>
                             <Link to={HOME_ROUTE}>
                                 <IconTooltipButton title="Home">
                                     <HomeIcon/>

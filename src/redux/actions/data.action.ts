@@ -1,6 +1,22 @@
 import { Dispatch } from "redux";
 import axios from "axios";
-import { DataActionType, DELETE_POST, LIKE_POST, LOADING_DATA, UNLIKE_POST, UPDATE_LIKE, UPDATE_POSTS, UPDATE_UNLIKE, UserActionType } from "../redux.constant";
+import {
+    CLEAR_ERRORS,
+    CREATE_POST,
+    DataActionType,
+    DELETE_POST,
+    LIKE_POST,
+    LOADING_DATA,
+    LOADING_UI,
+    POST_ERRORS,
+    UiActionType,
+    UNLIKE_POST,
+    UPDATE_LIKE,
+    UPDATE_POSTS,
+    UPDATE_UNLIKE,
+    UpdateLikeAction,
+    UpdateUnlikeAction
+} from "../redux.constant";
 import { likePostRout, POSTS_ROUT, unlikePostRout } from "../../constant/rest-api.constant";
 
 export const updatePosts = (dispatch: Dispatch<DataActionType>) => {
@@ -19,7 +35,17 @@ export const deletePost = (postId: string, dispatch: Dispatch<DataActionType>) =
         .catch(error => new Error(error))
 };
 
-export const likePost = (postId: string, dispatch: Dispatch<DataActionType | UserActionType>) => {
+export const createPost = (message: string, dispatch: Dispatch<DataActionType | UiActionType>) => {
+    dispatch({type: LOADING_UI});
+    axios.post(POSTS_ROUT, {message})
+        .then(response => {
+            dispatch({type: CREATE_POST, post: response.data});
+            dispatch({type: CLEAR_ERRORS});
+        })
+        .catch(error => dispatch({type: POST_ERRORS, errors: error.response.data}))
+};
+
+export const likePost = (postId: string, dispatch: Dispatch<DataActionType | UpdateLikeAction>) => {
     axios.post(likePostRout(postId))
         .then(response => {
             dispatch({type: LIKE_POST, post: response.data});
@@ -28,7 +54,7 @@ export const likePost = (postId: string, dispatch: Dispatch<DataActionType | Use
         .catch(error => new Error(error))
 };
 
-export const unlikePost = (postId: string, dispatch: Dispatch<DataActionType | UserActionType>) => {
+export const unlikePost = (postId: string, dispatch: Dispatch<DataActionType | UpdateUnlikeAction>) => {
     axios.post(unlikePostRout(postId))
         .then(response => {
             dispatch({type: UNLIKE_POST, post: response.data});

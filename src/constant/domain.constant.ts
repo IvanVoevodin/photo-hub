@@ -66,5 +66,9 @@ export interface SignupError {
     readonly handle?: string;
 }
 
+export interface PostError {
+    readonly error?: string
+}
+
 export const AUTH_HEADER = "Authorization";
 export const FB_TOKEN_KEY = "fbTokenId";

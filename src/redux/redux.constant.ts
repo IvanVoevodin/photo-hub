@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { LoginError, Post, SignupError, UserCredentials, UserData, UserLike } from "../constant/domain.constant";
+import { LoginError, Post, PostError, SignupError, UserCredentials, UserData, UserLike } from "../constant/domain.constant";
 
 // User reducer types
 export const AUTHENTICATED = "AUTHENTICATED";
@@ -12,6 +12,7 @@ export const UPDATE_UNLIKE = "update-unlike";
 // UI reducer types
 export const LOGIN_ERRORS = "LOGIN_ERRORS";
 export const SIGNUP_ERRORS = "SIGNUP_ERRORS";
+export const POST_ERRORS = "post-errors";
 export const LOADING_UI = "LOADING_UI";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 
@@ -53,7 +54,6 @@ export interface UpdateUnlikeAction extends BaseUpdateLikeAction<typeof UPDATE_U
 
 // UI actions
 export interface LoadingUiAction extends BaseAction<typeof LOADING_UI> {
-    readonly loading: boolean
 }
 
 export interface LoginErrorsAction extends BaseAction<typeof LOGIN_ERRORS> {
@@ -62,6 +62,10 @@ export interface LoginErrorsAction extends BaseAction<typeof LOGIN_ERRORS> {
 
 export interface SignupErrorsAction extends BaseAction<typeof SIGNUP_ERRORS> {
     readonly errors: SignupError
+}
+
+export interface PostErrorsAction extends BaseAction<typeof POST_ERRORS> {
+    readonly errors: PostError
 }
 
 export interface ClearErrorsAction extends BaseAction<typeof CLEAR_ERRORS> {
@@ -76,6 +80,7 @@ export interface UpdatePostsAction extends BaseAction<typeof UPDATE_POSTS> {
 }
 
 export interface CreatePostAction extends BaseAction<typeof CREATE_POST> {
+    readonly post: Post
 }
 
 export interface DeletePostAction extends BaseAction<typeof DELETE_POST> {
@@ -92,7 +97,7 @@ export interface LikePostAction extends BaseLikePostAction<typeof LIKE_POST> {
 export interface UnlikePostAction extends BaseLikePostAction<typeof UNLIKE_POST> {
 }
 
-export type UiActionType = LoadingUiAction | LoginErrorsAction | SignupErrorsAction | ClearErrorsAction
+export type UiActionType = LoadingUiAction | LoginErrorsAction | SignupErrorsAction | PostErrorsAction | ClearErrorsAction
 export type UserActionType = SetUserDataAction | SetUserAuthAction | SetUserUnauthAction | LoadingUserAction | UpdateLikeAction | UpdateUnlikeAction
 export type DataActionType = LoadingDataAction | UpdatePostsAction | CreatePostAction | DeletePostAction | LikePostAction | UnlikePostAction
 
@@ -122,7 +127,11 @@ export interface UiSignupState extends UiState {
     readonly signupErrors: SignupError
 }
 
-export interface UiGeneralState extends UiLoginState, UiSignupState {}
+export interface UiPostState extends UiState {
+    readonly postErrors: PostError
+}
+
+export interface UiGeneralState extends UiLoginState, UiSignupState, UiPostState {}
 
 export interface ReducerStateProp {
     user: UserSate

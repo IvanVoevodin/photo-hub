@@ -25,37 +25,29 @@ const storeAuthorizationToken = (token: string) => {
 };
 
 export const loginUser = (loginData: LoginData, history: History, dispatch: Dispatch<UserActionType | UiActionType>) => {
-    dispatch({type: LOADING_UI, loading: true});
+    dispatch({type: LOADING_UI});
     axios.post(LOGIN_ROUT, loginData)
         .then(response => {
             dispatch({type: AUTHENTICATED});
             storeAuthorizationToken(response.data.token);
             updateUserData(dispatch);
             dispatch({type: CLEAR_ERRORS});
-            dispatch({type: LOADING_UI, loading: false});
             history.push(HOME_ROUTE);
         })
-        .catch(error => {
-            dispatch({type: LOGIN_ERRORS, errors: error.response.data});
-            dispatch({type: LOADING_UI, loading: false});
-        })
+        .catch(error => dispatch({type: LOGIN_ERRORS, errors: error.response.data}))
 };
 
 export const signupUser = (signupData: SignupData, history: History, dispatch: Dispatch<UserActionType | UiActionType>) => {
-    dispatch({type: LOADING_UI, loading: true});
+    dispatch({type: LOADING_UI});
     axios.post(SIGNUP_ROUT, signupData)
         .then(response => {
             dispatch({type: AUTHENTICATED});
             storeAuthorizationToken(response.data.token);
             updateUserData(dispatch);
             dispatch({type: CLEAR_ERRORS});
-            dispatch({type: LOADING_UI, loading: false});
             history.push(HOME_ROUTE);
         })
-        .catch(error => {
-            dispatch({type: SIGNUP_ERRORS, errors: error.response.data});
-            dispatch({type: LOADING_UI, loading: false});
-        })
+        .catch(error => dispatch({type: SIGNUP_ERRORS, errors: error.response.data}))
 };
 
 export const authUser = (token: string, dispatch: Dispatch<UserActionType>) => {
