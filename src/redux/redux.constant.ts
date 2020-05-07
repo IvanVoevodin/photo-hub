@@ -14,13 +14,15 @@ export const LOGIN_ERRORS = "LOGIN_ERRORS";
 export const SIGNUP_ERRORS = "SIGNUP_ERRORS";
 export const POST_ERRORS = "post-errors";
 export const LOADING_UI = "LOADING_UI";
+export const STOP_LOADING_UI = "stop-loading-ui";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 
 // Data reducer types
 export const LOADING_DATA = "loading-data";
-export const UPDATE_POSTS = "update-posts";
+export const LOAD_POSTS = "load-posts";
 export const CREATE_POST = "create-post";
 export const DELETE_POST = "delete-post";
+export const SET_POST = "set-post";
 export const LIKE_POST = "like-post";
 export const UNLIKE_POST = "unlike-post";
 
@@ -56,6 +58,9 @@ export interface UpdateUnlikeAction extends BaseUpdateLikeAction<typeof UPDATE_U
 export interface LoadingUiAction extends BaseAction<typeof LOADING_UI> {
 }
 
+export interface StopLoadingUiAction extends BaseAction<typeof STOP_LOADING_UI> {
+}
+
 export interface LoginErrorsAction extends BaseAction<typeof LOGIN_ERRORS> {
     readonly errors: LoginError
 }
@@ -75,7 +80,7 @@ export interface ClearErrorsAction extends BaseAction<typeof CLEAR_ERRORS> {
 export interface LoadingDataAction extends BaseAction<typeof LOADING_DATA> {
 }
 
-export interface UpdatePostsAction extends BaseAction<typeof UPDATE_POSTS> {
+export interface UpdatePostsAction extends BaseAction<typeof LOAD_POSTS> {
     readonly posts: Post[]
 }
 
@@ -85,6 +90,10 @@ export interface CreatePostAction extends BaseAction<typeof CREATE_POST> {
 
 export interface DeletePostAction extends BaseAction<typeof DELETE_POST> {
     readonly postId: string
+}
+
+export interface SetPostAction extends BaseAction<typeof SET_POST> {
+    readonly post: Post
 }
 
 interface BaseLikePostAction<T extends typeof LIKE_POST | typeof UNLIKE_POST> extends BaseAction<T> {
@@ -97,9 +106,9 @@ export interface LikePostAction extends BaseLikePostAction<typeof LIKE_POST> {
 export interface UnlikePostAction extends BaseLikePostAction<typeof UNLIKE_POST> {
 }
 
-export type UiActionType = LoadingUiAction | LoginErrorsAction | SignupErrorsAction | PostErrorsAction | ClearErrorsAction
+export type UiActionType = LoadingUiAction | StopLoadingUiAction | LoginErrorsAction | SignupErrorsAction | PostErrorsAction | ClearErrorsAction
 export type UserActionType = SetUserDataAction | SetUserAuthAction | SetUserUnauthAction | LoadingUserAction | UpdateLikeAction | UpdateUnlikeAction
-export type DataActionType = LoadingDataAction | UpdatePostsAction | CreatePostAction | DeletePostAction | LikePostAction | UnlikePostAction
+export type DataActionType = LoadingDataAction | UpdatePostsAction | CreatePostAction | DeletePostAction | SetPostAction | LikePostAction | UnlikePostAction
 
 export interface UserSate {
     readonly authenticated: boolean

@@ -15,6 +15,7 @@ import IconTooltipButton from "./icon-tooltip-button.component";
 import { ReducerStateProp, UserSate } from "../redux/redux.constant";
 import { likePost, unlikePost } from "../redux/actions/data.action";
 import DeletePost from "./delete-post.component";
+import PostDialog from "./post-dialog.component";
 
 dayjs.extend(relativeTime);
 
@@ -41,7 +42,7 @@ interface PostProps {
 
 const Post: React.FC<PostProps> = (props: PostProps) => {
     const {post} = props;
-    const {postId, userName, userImage, message, creationTime, likeCount} = post;
+    const {postId, userName, userImage, message, creationTime, likeCount, commentCount} = post;
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -86,6 +87,8 @@ const Post: React.FC<PostProps> = (props: PostProps) => {
                 <IconTooltipButton title="Comments">
                     <ChatIcon color="primary"/>
                 </IconTooltipButton>
+                <span>{commentCount} Comments</span>
+                <PostDialog postId={postId}/>
             </CardContent>
         </Card>
     )

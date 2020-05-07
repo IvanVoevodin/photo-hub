@@ -2,7 +2,7 @@ import axios from "axios";
 import { History } from "history";
 import { Dispatch } from "redux";
 import { AUTH_HEADER, FB_TOKEN_KEY, LoginData, SignupData, UserCredentials } from "../../constant/domain.constant";
-import { AUTHENTICATED, CLEAR_ERRORS, LOADING_UI, LOADING_USER, LOGIN_ERRORS, SET_USER, SIGNUP_ERRORS, UiActionType, UNAUTHENTICATED, UserActionType } from "../redux.constant";
+import { AUTHENTICATED, CLEAR_ERRORS, LOADING_UI, LOADING_USER, LOGIN_ERRORS, SET_USER, SIGNUP_ERRORS, STOP_LOADING_UI, UiActionType, UNAUTHENTICATED, UserActionType } from "../redux.constant";
 import { LOGIN_ROUT, SIGNUP_ROUT, USER_DATA_ROUT, USER_IMAGE_ROUT } from "../../constant/rest-api.constant";
 import { HOME_ROUTE } from "../../constant/app-route.constant";
 
@@ -25,26 +25,28 @@ const storeAuthorizationToken = (token: string) => {
 };
 
 export const loginUser = (loginData: LoginData, history: History, dispatch: Dispatch<UserActionType | UiActionType>) => {
+    dispatch({type: CLEAR_ERRORS});
     dispatch({type: LOADING_UI});
     axios.post(LOGIN_ROUT, loginData)
         .then(response => {
             dispatch({type: AUTHENTICATED});
             storeAuthorizationToken(response.data.token);
             updateUserData(dispatch);
-            dispatch({type: CLEAR_ERRORS});
+            dispatch({type: STOP_LOADING_UI});
             history.push(HOME_ROUTE);
         })
         .catch(error => dispatch({type: LOGIN_ERRORS, errors: error.response.data}))
 };
 
 export const signupUser = (signupData: SignupData, history: History, dispatch: Dispatch<UserActionType | UiActionType>) => {
+    dispatch({type: CLEAR_ERRORS});
     dispatch({type: LOADING_UI});
     axios.post(SIGNUP_ROUT, signupData)
         .then(response => {
             dispatch({type: AUTHENTICATED});
             storeAuthorizationToken(response.data.token);
             updateUserData(dispatch);
-            dispatch({type: CLEAR_ERRORS});
+            dispatch({type: STOP_LOADING_UI});
             history.push(HOME_ROUTE);
         })
         .catch(error => dispatch({type: SIGNUP_ERRORS, errors: error.response.data}))

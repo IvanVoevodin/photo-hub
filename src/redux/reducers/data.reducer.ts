@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { CREATE_POST, DataActionType, DataState, DELETE_POST, LIKE_POST, LOADING_DATA, UNLIKE_POST, UPDATE_POSTS } from "../redux.constant";
+import { CREATE_POST, DataActionType, DataState, DELETE_POST, LIKE_POST, LOAD_POSTS, LOADING_DATA, SET_POST, UNLIKE_POST } from "../redux.constant";
 import { Post } from "../../constant/domain.constant";
 
 const initialState: DataState = {
@@ -23,7 +23,7 @@ const dataReducer: Reducer<DataState, DataActionType> = (state = initialState, a
     switch (action.type) {
         case LOADING_DATA:
             return {...state, loading: true};
-        case UPDATE_POSTS:
+        case LOAD_POSTS:
             return {...state, posts: action.posts, loading: false};
         case LIKE_POST:
         case UNLIKE_POST:
@@ -32,6 +32,8 @@ const dataReducer: Reducer<DataState, DataActionType> = (state = initialState, a
             return {...state, posts: [action.post, ...state.posts]};
         case DELETE_POST:
             return {...state, posts: removePostById(Array.from(state.posts), action.postId)};
+        case SET_POST:
+            return {...state, post: action.post};
         default:
             return state
     }

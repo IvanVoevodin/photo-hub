@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "../components/post.component";
 import Profile from "../components/profile.component";
-import { updatePosts } from "../redux/actions/data.action";
+import { loadPosts } from "../redux/actions/data.action";
 import { DataState, ReducerStateProp } from "../redux/redux.constant";
 
 const Home: React.FC = () => {
@@ -12,7 +12,7 @@ const Home: React.FC = () => {
     const {posts, loading} = useSelector<ReducerStateProp, DataState>(state => state.data);
 
     useEffect(() => {
-        updatePosts(dispatch);
+        loadPosts(dispatch);
     }, [dispatch]);
 
     const recentPostsMarkup = !loading ?

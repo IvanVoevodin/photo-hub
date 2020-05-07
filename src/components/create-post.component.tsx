@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Add as AddIcon, Close as CloseIcon } from "@material-ui/icons";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -11,6 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { ReducerStateProp, UiPostState } from "../redux/redux.constant";
 import IconTooltipButton from "./icon-tooltip-button.component";
 import { createPost } from "../redux/actions/data.action";
+import clearErrors from "../redux/actions/ui.action";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -18,7 +19,9 @@ const useStyles = makeStyles(() =>
             marginBottom: "20px"
         },
         submitButton: {
-            position: "relative"
+            position: "relative",
+            float: "right",
+            marginBottom: "10px"
         },
         progressSpinner: {
             position: "absolute"
@@ -43,20 +46,22 @@ const CreatePost: React.FC = () => {
         setOpen(true)
     };
 
-    const handleClose = () => {
-        setOpen(false)
-    };
+    const handleClose = useCallback(() => {
+        clearErrors(dispatch);
+        setOpen(false);
+    }, [dispatch]);
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
         createPost(message, dispatch);
+        setMessage("");
     };
 
     useEffect(() => {
         if (!error && !loading) {
             handleClose()
         }
-    }, [error, loading]);
+    }, [error, handleClose, loading]);
 
     return (
         <>
