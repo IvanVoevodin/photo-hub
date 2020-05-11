@@ -9,12 +9,17 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import IconTooltipButton from "./icon-tooltip-button.component";
-import { Post } from "../constant/domain.constant";
-import { ReducerStateProp } from "../redux/redux.constant";
-import { getPost } from "../redux/actions/data.action";
-import { USERS_ROUTE } from "../constant/app-route.constant";
+import IconTooltipButton from "../icon-tooltip-button.component";
+import { Post } from "../../constant/domain.constant";
+import { ReducerStateProp } from "../../redux/redux.constant";
+import { getPost } from "../../redux/actions/data.action";
+import { USERS_ROUTE } from "../../constant/app-route.constant";
+import LikeButton from "./like-button.component";
+import Comments from "./comments.component";
+import commonStyle from "../../styles/common.style";
+import CommentForm from "./comment-form.component";
 
+const useCommonStyles = makeStyles(() => createStyles(commonStyle));
 const useStyles = makeStyles(() =>
     createStyles({
         profileImage: {
@@ -39,10 +44,6 @@ const useStyles = makeStyles(() =>
             textAlign: "center",
             marginTop: 50,
             marginBottom: 50
-        },
-        invisibleSeparator: {
-            border: "none",
-            margin: "4px"
         }
     })
 );
@@ -53,6 +54,8 @@ interface PostDialogProps {
 
 const PostDialog: React.FC<PostDialogProps> = (props: PostDialogProps) => {
     const classes = useStyles();
+    const commonClasses = useCommonStyles();
+
     const [open, setOpen] = useState(false);
 
     const {loading, post} = useSelector<ReducerStateProp, {loading: boolean, post?: Post}>(state => {
@@ -81,7 +84,7 @@ const PostDialog: React.FC<PostDialogProps> = (props: PostDialogProps) => {
         )
     }
 
-    const {userName, userImage, creationTime, message, commentCount} = post;
+    const {postId, userName, userImage, creationTime, message, likeCount, commentCount, comments} = post;
 
     const dialogMarkup = loading ? (
         <div className={classes.spinnerDiv}>
@@ -96,18 +99,24 @@ const PostDialog: React.FC<PostDialogProps> = (props: PostDialogProps) => {
                 <Typography component={Link} color="primary" variant="h5" to={`${USERS_ROUTE}/${userName}`}>
                     @{userName}
                 </Typography>
-                <hr className={classes.invisibleSeparator}/>
+                <hr className={commonClasses.invisibleSeparator}/>
                 <Typography variant="body2" color="textSecondary">
                     {dayjs(creationTime).format("h:mm a, MMMM DD YYYY")}
                 </Typography>
-                <hr className={classes.invisibleSeparator}/>
+                <hr className={commonClasses.invisibleSeparator}/>
                 <Typography variant="body1">{message}</Typography>
+
+                <LikeButton postId={postId}/>
+                <span>{likeCount} Likes</span>
 
                 <IconTooltipButton title="Comments">
                     <ChatIcon color="primary"/>
                 </IconTooltipButton>
                 <span>{commentCount} Comments</span>
             </Grid>
+            <hr className={commonClasses.separator}/>
+            <CommentForm postId={postId}/>
+            <Comments comments={comments}/>
         </Grid>
     );
 

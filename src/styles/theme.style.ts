@@ -13,7 +13,7 @@ const themeOptions: ThemeOptions = {
             main: "#ffd600",
             dark: "#b29500",
             contrastText: "#000",
-        },
+        }
     }
 };
 

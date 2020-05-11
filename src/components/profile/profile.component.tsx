@@ -8,12 +8,12 @@ import Typography from "@material-ui/core/Typography";
 import { CalendarToday, Edit as EditIcon, KeyboardReturn, Link as LinkIcon, LocationOn } from "@material-ui/icons";
 import dayjs from "dayjs";
 import Button from "@material-ui/core/Button";
-import { LOGIN_ROUTE, SIGNUP_ROUTE, USERS_ROUTE } from "../constant/app-route.constant";
-import profileStyle from "../styles/profile.style";
-import { ReducerStateProp, UserSate } from "../redux/redux.constant";
-import { logoutUser, uploadImage } from "../redux/actions/user.action";
+import { LOGIN_ROUTE, SIGNUP_ROUTE, USERS_ROUTE } from "../../constant/app-route.constant";
+import profileStyle from "../../styles/profile.style";
+import { ReducerStateProp, UserSate } from "../../redux/redux.constant";
+import { logoutUser, uploadImage } from "../../redux/actions/user.action";
 import EditDetails from "./edit-details.component";
-import IconTooltipButton from "./icon-tooltip-button.component";
+import IconTooltipButton from "../icon-tooltip-button.component";
 
 const useStyles = makeStyles(() =>
     createStyles(profileStyle)

@@ -2,6 +2,8 @@ import { Dispatch } from "redux";
 import axios from "axios";
 import {
     CLEAR_ERRORS,
+    COMMON_ERRORS,
+    CREATE_COMMENT,
     CREATE_POST,
     DataActionType,
     DELETE_POST,
@@ -9,7 +11,6 @@ import {
     LOAD_POSTS,
     LOADING_DATA,
     LOADING_UI,
-    POST_ERRORS,
     SET_POST,
     STOP_LOADING_UI,
     UiActionType,
@@ -19,7 +20,7 @@ import {
     UpdateLikeAction,
     UpdateUnlikeAction
 } from "../redux.constant";
-import { likePostRout, POSTS_ROUT, unlikePostRout } from "../../constant/rest-api.constant";
+import { COMMENT_ROUT, likePostRout, POSTS_ROUT, unlikePostRout } from "../../constant/rest-api.constant";
 
 export const loadPosts = (dispatch: Dispatch<DataActionType>) => {
     dispatch({type: LOADING_DATA});
@@ -45,7 +46,7 @@ export const createPost = (message: string, dispatch: Dispatch<DataActionType | 
             dispatch({type: CREATE_POST, post: response.data});
             dispatch({type: STOP_LOADING_UI});
         })
-        .catch(error => dispatch({type: POST_ERRORS, errors: error.response.data}))
+        .catch(error => dispatch({type: COMMON_ERRORS, errors: error.response.data}))
 };
 
 export const getPost = (postId: string, dispatch: Dispatch<DataActionType | UiActionType>) => {
@@ -77,4 +78,11 @@ export const unlikePost = (postId: string, dispatch: Dispatch<DataActionType | U
             dispatch({type: UPDATE_UNLIKE, post: response.data});
         })
         .catch(error => new Error(error))
+};
+
+export const createComment = (postId: string, message: string, dispatch: Dispatch<DataActionType | UiActionType>) => {
+    dispatch({type: CLEAR_ERRORS});
+    axios.post(`${POSTS_ROUT}/${postId}/${COMMENT_ROUT}`, {message})
+        .then(response => dispatch({type: CREATE_COMMENT, comment: response.data}))
+        .catch(error => dispatch({type: COMMON_ERRORS, errors: error.response.data}))
 };

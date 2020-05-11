@@ -8,10 +8,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { ReducerStateProp, UiPostState } from "../redux/redux.constant";
-import IconTooltipButton from "./icon-tooltip-button.component";
-import { createPost } from "../redux/actions/data.action";
-import clearErrors from "../redux/actions/ui.action";
+import { ReducerStateProp, UiCommonState } from "../../redux/redux.constant";
+import IconTooltipButton from "../icon-tooltip-button.component";
+import { createPost } from "../../redux/actions/data.action";
+import clearErrors from "../../redux/actions/ui.action";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -39,7 +39,7 @@ const CreatePost: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
 
-    const {loading, postErrors: {error}} = useSelector<ReducerStateProp, UiPostState>(state => state.ui, shallowEqual);
+    const {loading, commonErrors: {error}} = useSelector<ReducerStateProp, UiCommonState>(state => state.ui, shallowEqual);
     const dispatch = useDispatch();
 
     const handleOpen = () => {

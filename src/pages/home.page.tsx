@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import { useDispatch, useSelector } from "react-redux";
-import Post from "../components/post.component";
-import Profile from "../components/profile.component";
+import Post from "../components/post/post.component";
+import Profile from "../components/profile/profile.component";
 import { loadPosts } from "../redux/actions/data.action";
 import { DataState, ReducerStateProp } from "../redux/redux.constant";
 

@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import Home from "./pages/home.page";
 import Login from "./pages/login.page";
 import Signup from "./pages/signup.page";
-import NavigationBar from "./components/navigation-bar.component";
+import NavigationBar from "./components/layout/navigation-bar.component";
 import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "./constant/app-route.constant";
 import themeOptions from "./styles/theme.style";
 import { FB_TOKEN_KEY, TokenDto } from "./constant/domain.constant";

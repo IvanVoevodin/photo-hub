@@ -7,10 +7,10 @@ import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { shallowEqual, useSelector } from "react-redux";
 import { Home as HomeIcon, Notifications as NotificationsIcon } from "@material-ui/icons";
-import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "../constant/app-route.constant";
-import { ReducerStateProp, UserSate } from "../redux/redux.constant";
-import IconTooltipButton from "./icon-tooltip-button.component";
-import CreatePost from "./create-post.component";
+import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "../../constant/app-route.constant";
+import { ReducerStateProp, UserSate } from "../../redux/redux.constant";
+import IconTooltipButton from "../icon-tooltip-button.component";
+import CreatePost from "../post/create-post.component";
 
 const useStyles = makeStyles(() =>
     createStyles({

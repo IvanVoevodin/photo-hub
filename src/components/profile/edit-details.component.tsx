@@ -8,9 +8,9 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import { useDispatch } from "react-redux";
-import { editUserDetails } from "../redux/actions/user.action";
-import { UserCredentials } from "../constant/domain.constant";
-import IconTooltipButton from "./icon-tooltip-button.component";
+import { editUserDetails } from "../../redux/actions/user.action";
+import { UserCredentials } from "../../constant/domain.constant";
+import IconTooltipButton from "../icon-tooltip-button.component";
 
 const useStyles = makeStyles(() =>
     createStyles({

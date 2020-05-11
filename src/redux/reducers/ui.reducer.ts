@@ -1,11 +1,11 @@
 import { Reducer } from "redux";
-import { CLEAR_ERRORS, LOADING_UI, LOGIN_ERRORS, POST_ERRORS, SIGNUP_ERRORS, STOP_LOADING_UI, UiActionType, UiGeneralState } from "../redux.constant";
+import { CLEAR_ERRORS, COMMON_ERRORS, LOADING_UI, LOGIN_ERRORS, SIGNUP_ERRORS, STOP_LOADING_UI, UiActionType, UiGeneralState } from "../redux.constant";
 
 const initialState: UiGeneralState = {
     loading: false,
     loginErrors: {},
     signupErrors: {},
-    postErrors: {}
+    commonErrors: {}
 };
 
 const uiReducer: Reducer<UiGeneralState, UiActionType> = (state = initialState, action) => {
@@ -18,10 +18,10 @@ const uiReducer: Reducer<UiGeneralState, UiActionType> = (state = initialState, 
             return {...state, loginErrors: action.errors, loading: false};
         case SIGNUP_ERRORS:
             return {...state, signupErrors: action.errors, loading: false};
-        case POST_ERRORS:
-            return {...state, postErrors: action.errors, loading: false};
+        case COMMON_ERRORS:
+            return {...state, commonErrors: action.errors, loading: false};
         case CLEAR_ERRORS:
-            return {...state, loginErrors: {}, signupErrors: {}, postErrors: {}};
+            return {...state, loginErrors: {}, signupErrors: {}, commonErrors: {}};
         default:
             return state
     }

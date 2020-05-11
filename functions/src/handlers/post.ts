@@ -105,7 +105,7 @@ export const deletePost = (request: any, response: Response) => {
 
 export const commentOnPost = (request: any, response: Response) => {
     if ((request.body.message as string).trim() === "") {
-        response.status(STATUS_CLIENT_ERROR).json({comment: EMPTY_ERROR})
+        response.status(STATUS_CLIENT_ERROR).json({error: EMPTY_ERROR})
     } else {
         const newComment: CommentData = {
             message: request.body.message,

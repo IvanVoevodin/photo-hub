@@ -1,8 +1,16 @@
+export interface Comment {
+    readonly postId: string
+    readonly userName: string
+    readonly userImage: string
+    readonly creationTime: string
+    readonly message: string
+}
+
 export interface Post {
     readonly postId: string,
     readonly likeCount: number,
     readonly userName: string,
-    readonly comments: [], // todo make type
+    readonly comments: Comment[],
     readonly commentCount: number,
     readonly userImage: string,
     readonly creationTime: string,
@@ -66,7 +74,7 @@ export interface SignupError {
     readonly handle?: string;
 }
 
-export interface PostError {
+export interface CommonError {
     readonly error?: string
 }
 

@@ -6,8 +6,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { deletePost } from "../redux/actions/data.action";
-import IconTooltipButton from "./icon-tooltip-button.component";
+import { deletePost } from "../../redux/actions/data.action";
+import IconTooltipButton from "../icon-tooltip-button.component";
 
 const useStyles = makeStyles(() =>
     createStyles({
